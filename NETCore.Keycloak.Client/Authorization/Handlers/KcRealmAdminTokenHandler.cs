@@ -62,7 +62,8 @@ public sealed class KcRealmAdminTokenHandler : IKcRealmAdminTokenHandler
 
         // Create a scoped service provider to resolve the logger service.
         using var scope = provider.CreateScope();
-        _logger = scope.ServiceProvider.GetRequiredService<ILogger>(); // Get the logger from the scoped provider.
+        _logger = scope.ServiceProvider
+            .GetRequiredService<ILogger<IKcRealmAdminTokenHandler>>();
 
         // Initialize the token cache to store access and refresh tokens for different realms.
         _tokensCache = new ConcurrentDictionary<string, KcCachedToken>();

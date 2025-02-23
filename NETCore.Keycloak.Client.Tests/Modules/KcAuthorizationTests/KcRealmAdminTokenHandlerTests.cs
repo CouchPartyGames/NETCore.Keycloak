@@ -58,12 +58,12 @@ public class KcRealmAdminTokenHandlerTests : KcTestingModule
             .Returns(mockScope.Object);
 
         // Mock the logger.
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<IKcRealmAdminTokenHandler>>();
         _ = mockLogger.Setup(logger => logger.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
         // Mock the service provider to return the logger when requested.
         _ = mockScope.Setup(x => x.ServiceProvider).Returns(_mockProvider.Object);
-        _ = _mockProvider.Setup(x => x.GetService(typeof(ILogger)))
+        _ = _mockProvider.Setup(x => x.GetService(typeof(ILogger<IKcRealmAdminTokenHandler>)))
             .Returns(mockLogger.Object);
 
         // Define test configuration for the Keycloak realm.

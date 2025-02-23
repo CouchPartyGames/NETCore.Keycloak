@@ -139,14 +139,14 @@ public class KcBearerAuthorizationHandlerTests : KcTestingModule
             .Returns(mockScope.Object);
 
         // Set up a mock logger to simulate logging functionality
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<IKcRealmAdminTokenHandler>>();
         _ = mockLogger.Setup(logger => logger.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
         // Configure the mock scope to resolve services
         _ = mockScope.Setup(x => x.ServiceProvider).Returns(_mockProvider.Object);
 
         // Mock resolution of ILogger from the service provider
-        _ = _mockProvider.Setup(x => x.GetService(typeof(ILogger)))
+        _ = _mockProvider.Setup(x => x.GetService(typeof(ILogger<IKcRealmAdminTokenHandler>)))
             .Returns(mockLogger.Object);
 
         // Mock resolution of IHttpContextAccessor from the service provider
@@ -772,14 +772,14 @@ public class KcBearerAuthorizationHandlerTests : KcTestingModule
             .Returns(mockScope.Object);
 
         // Set up a mock logger to simulate logging functionality
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<IKcRealmAdminTokenHandler>>();
         _ = mockLogger.Setup(logger => logger.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
         // Configure the mock scope to resolve services
         _ = mockScope.Setup(x => x.ServiceProvider).Returns(mockProvider.Object);
 
         // Mock resolution of ILogger from the service provider
-        _ = mockProvider.Setup(x => x.GetService(typeof(ILogger)))
+        _ = mockProvider.Setup(x => x.GetService(typeof(ILogger<IKcRealmAdminTokenHandler>)))
             .Returns(mockLogger.Object);
 
         // Define a test-specific configuration for the Keycloak realm

@@ -80,7 +80,7 @@ public class KcAuthenticationConfiguration
     /// <summary>
     /// List of valid audiences
     /// </summary>
-    public IEnumerable<string> ValidAudiences { get; set; } = new List<string>();
+    public IEnumerable<string> ValidAudiences { get; set; } = [];
 
     /// <summary>
     /// Get valid issuer

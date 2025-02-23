@@ -3,7 +3,6 @@ namespace NETCore.Keycloak.Client.Exceptions;
 /// <summary>
 /// Represents an exception specific to Keycloak operations.
 /// </summary>
-[Serializable]
 public class KcException : Exception
 {
     /// <summary>

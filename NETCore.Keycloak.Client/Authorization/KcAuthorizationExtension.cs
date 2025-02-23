@@ -18,8 +18,9 @@ public static class KcAuthorizationExtension
     /// <param name="services"></param>
     /// <returns></returns>
     public static IServiceCollection AddKeycloakAuthorization(this IServiceCollection services) =>
-        services
-            .AddSingleton<IAuthorizationHandler, KcBearerAuthorizationHandler>().AddHttpContextAccessor();
+        services.AddSingleton<IAuthorizationHandler, KcBearerAuthorizationHandler>()
+            .AddHttpContextAccessor()
+            .AddLogging();
 
     /// <summary>
     /// Add keycloak policy provider
@@ -35,9 +36,8 @@ public static class KcAuthorizationExtension
             .AddSingleton<KcRealmAdminConfigurationStore, TV>()
             .AddSingleton<IKcRealmAdminTokenHandler, KcRealmAdminTokenHandler>()
             .AddSingleton<IAuthorizationPolicyProvider, KcProtectedResourcePolicyProvider>(
-                provider =>
-                    new KcProtectedResourcePolicyProvider(provider,
-                        provider.GetRequiredService<IOptions<AuthorizationOptions>>()));
+                provider => new KcProtectedResourcePolicyProvider(provider,
+                    provider.GetRequiredService<IOptions<AuthorizationOptions>>()));
         return services;
     }
 }

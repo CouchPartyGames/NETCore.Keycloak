@@ -68,7 +68,7 @@ public class KcAuthorizationExtensionTests : KcTestingModule
             });
 
         // Create a mock for ILogger to simulate logging functionality.
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<IKcRealmAdminTokenHandler>>();
         _ = mockLogger.Setup(logger => logger.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
         // Add Keycloak services, the token handler, and the logger to the service collection.
@@ -112,7 +112,7 @@ public class KcAuthorizationExtensionTests : KcTestingModule
         var mockAuthorizationOptions = new Mock<IOptions<AuthorizationOptions>>();
 
         // Create a mock for ILogger to simulate logging functionality.
-        var mockLogger = new Mock<ILogger>();
+        var mockLogger = new Mock<ILogger<IKcRealmAdminTokenHandler>>();
         _ = mockLogger.Setup(logger => logger.IsEnabled(It.IsAny<LogLevel>())).Returns(true);
 
         // Add mocked services to the service collection.
