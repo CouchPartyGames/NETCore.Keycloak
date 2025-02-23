@@ -42,7 +42,7 @@ public class KcBearerAuthorizationHandler : AuthorizationHandler<KcAuthorization
         using var scope = serviceProvider.CreateScope();
 
         // Resolve the logger instance.
-        _logger = scope.ServiceProvider.GetService<ILogger>();
+        _logger = scope.ServiceProvider.GetService<ILogger<KcBearerAuthorizationHandler>>();
 
         // Resolve the HTTP context accessor for accessing request data.
         _httpContextAccessor = scope.ServiceProvider.GetRequiredService<IHttpContextAccessor>();
@@ -61,10 +61,10 @@ public class KcBearerAuthorizationHandler : AuthorizationHandler<KcAuthorization
         KcAuthorizationRequirement requirement)
     {
         // Ensure that authorization context is not null
-        ArgumentNullException.ThrowIfNull(context, "Authorization context is required.");
+        ArgumentNullException.ThrowIfNull(context);
 
         // Ensure that authorization requirement is not null.
-        ArgumentNullException.ThrowIfNull(requirement, "Authorization requirement is required.");
+        ArgumentNullException.ThrowIfNull(requirement);
 
         // Check if the user is authenticated
         if ( context.User.Identity?.IsAuthenticated ?? false )

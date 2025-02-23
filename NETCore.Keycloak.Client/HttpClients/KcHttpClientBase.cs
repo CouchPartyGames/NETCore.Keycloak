@@ -329,9 +329,6 @@ public abstract class KcHttpClientBase
         {
             NullValueHandling = NullValueHandling.Ignore,
             ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
-            Converters = new List<JsonConverter>
-            {
-                new StringEnumConverter()
-            }
+            Converters = [new StringEnumConverter()]
         }));
 }

@@ -54,6 +54,9 @@ csharp_space_between_square_brackets = false
 csharp_preserve_single_line_statements = true
 csharp_preserve_single_line_blocks = true
 
+# Ensure source code is documented
+dotnet_diagnostic.CS1591.severity = error
+
 # Ensure names and members access are simplified 
 dotnet_diagnostic.ide0001.severity = error
 dotnet_diagnostic.ide0002.severity = error

@@ -31,8 +31,19 @@ namespace NETCore.Keycloak.Client.Authentication.Claims;
 /// </remarks>
 public class KcRolesClaimsTransformer : IClaimsTransformation
 {
+    /// <summary>
+    /// Represents the claim type used to identify user roles within the application.
+    /// </summary>
     private readonly string _roleClaimType;
+
+    /// <summary>
+    /// Defines the source of the role claims, used to identify how roles are sourced.
+    /// </summary>
     private readonly KcRolesClaimSource _roleSource;
+
+    /// <summary>
+    /// Represents the audience for the token, used to validate the intended recipient of the token.
+    /// </summary>
     private readonly string _audience;
 
     /// <summary>

@@ -51,7 +51,7 @@ public class KcAuthorizationRequirement : IAuthorizationRequirement
     public KcAuthorizationRequirement(KcProtectedResourceStore protectedResourceStore, string resource, string scope)
     {
         // Ensure protected resources is not null
-        ArgumentNullException.ThrowIfNull(protectedResourceStore, $"{nameof(protectedResourceStore)} cannot be null.");
+        ArgumentNullException.ThrowIfNull(protectedResourceStore);
 
         // Ensure resource is not null or empty
         if ( string.IsNullOrWhiteSpace(resource) )

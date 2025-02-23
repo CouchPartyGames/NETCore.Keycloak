@@ -19,6 +19,5 @@ public class KcOperationResponse<T> : KcBaseResponse<T>
     /// or <c>null</c> if no metrics are available.
     /// </value>
     [JsonProperty("monitoringMetrics")]
-    public ICollection<KcHttpApiMonitoringMetrics> MonitoringMetrics { get; } =
-        new List<KcHttpApiMonitoringMetrics>();
+    public ICollection<KcHttpApiMonitoringMetrics> MonitoringMetrics { get; } = [];
 }
