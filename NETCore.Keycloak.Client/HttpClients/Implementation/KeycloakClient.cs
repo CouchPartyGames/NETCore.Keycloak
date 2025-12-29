@@ -38,6 +38,9 @@ public sealed class KeycloakClient : IKeycloakClient
     /// <inheritdoc cref="IKeycloakClient.Groups"/>
     public IKcGroups Groups { get; }
 
+    /// <inheritdoc cref="IKeycloakClient.Organizations"/>
+    public IKcOrganizations Organizations { get; }
+
     /// <inheritdoc cref="IKeycloakClient.ProtocolMappers"/>
     public IKcProtocolMappers ProtocolMappers { get; }
 
@@ -83,6 +86,7 @@ public sealed class KeycloakClient : IKeycloakClient
         ClientScopes = new KcClientScopes(adminUrl, logger);
         Clients = new KcClients(adminUrl, logger);
         Groups = new KcGroups(adminUrl, logger);
+        Organizations = new KcOrganizations(adminUrl, logger);
         ProtocolMappers = new KcProtocolMappers(adminUrl, logger);
         ScopeMappings = new KcScopeMappings(adminUrl, logger);
         RoleMappings = new KcRoleMappings(adminUrl, logger);
