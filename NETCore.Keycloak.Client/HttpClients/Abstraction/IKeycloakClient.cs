@@ -66,6 +66,12 @@ public interface IKeycloakClient
     public IKcGroups Groups { get; }
 
     /// <summary>
+    /// Gets the organizations REST client for managing organizations and their configurations.
+    /// See <see cref="IKcOrganizations"/> for detailed operations.
+    /// </summary>
+    public IKcOrganizations Organizations { get; }
+
+    /// <summary>
     /// Gets the protocol mappers REST client for managing protocol mappers.
     /// See <see cref="IKcProtocolMappers"/> for detailed functionality.
     /// </summary>
