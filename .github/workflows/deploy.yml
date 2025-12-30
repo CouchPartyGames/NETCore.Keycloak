@@ -12,17 +12,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Setup .NET SDK - supports all target frameworks (net8.0, net9.0, net10.0)
+      # Setup .NET SDK - supports all target frameworks (net6.0, net8.0, net9.0, net10.0)
       - name: Set up .NET SDK
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: |
             8.0.x
             9.0.x
+            10.0.x
 
       # Setup cake tool
       - name: Setup cake tool
-        run: dotnet tool install --global Cake.Tool
+        run: dotnet tool install --global Cake.Tool --version 6.0.0
 
       # Build the project
       - name: Build project
