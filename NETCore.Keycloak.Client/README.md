@@ -8,7 +8,7 @@
 
 | Category     | Supported Versions                                                      |
 | ------------ | ----------------------------------------------------------------------- |
-| .NET         | 6.0, 7.0, 8.0                                                           |
+| .NET         | 8.0, 9.0, 10.0                                                           |
 | Dependencies | ASP.NET Core, Microsoft.Extensions.DependencyInjection, Newtonsoft.Json |
 
 ## ✅ Version Compatibility

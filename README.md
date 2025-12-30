@@ -39,7 +39,7 @@
 
 | Category     | Supported Versions                                                      |
 | ------------ | ----------------------------------------------------------------------- |
-| .NET         | 6.0, 7.0, 8.0                                                           |
+| .NET         | 8.0, 9.0, 10.0                                                           |
 | Dependencies | ASP.NET Core, Microsoft.Extensions.DependencyInjection, Newtonsoft.Json |
 
 ## ✅ Version Compatibility
@@ -64,6 +64,7 @@
 - 👥 Advanced user and group management
 - 🔑 Multiple authentication flows support
 - 📈 Enterprise-grade scalability
+- 📊 Organizations support
 
 ## 📚 Table of Contents
 
@@ -139,6 +140,75 @@ var users = await keycloakClient.Users.GetAsync(
     "your-realm",
     token.AccessToken,
     new KcUserFilter { Max = 10 });
+```
+
+### 📊 Organizations
+
+```csharp
+var client = new KeycloakClient("http://localhost:8080");
+var token = await client.Auth.GetClientCredentialsTokenAsync(realm, credentials);
+
+// Get count of all organizations
+var count = await client.Organizations.CountAsync(realm, token.Response.AccessToken);
+
+// List organizations with filter
+var filter = new KcOrganizationFilter
+{
+    Search = "test",
+    Exact = false,
+    Max = 50
+};
+var orgs = await client.Organizations.ListAsync(realm, token.Response.AccessToken, filter);
+
+// Get specific organization
+var org = await client.Organizations.GetAsync(realm, token.Response.AccessToken, orgId);
+```
+
+### 📊 Organization Members
+
+```csharp
+var client = new KeycloakClient("http://localhost:8080");
+var token = await client.Auth.GetClientCredentialsTokenAsync(realm, credentials);
+
+// Get all members of an organization
+var members = await client.Organizations.GetMembersAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId);
+
+// Get count of members
+var count = await client.Organizations.GetMembersCountAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId);
+
+// Filter members by membership type
+var filter = new KcOrganizationMemberFilter
+{
+    MembershipType = KcMembershipType.Managed,
+    Search = "john",
+    Exact = false,
+    Max = 50
+};
+var managedMembers = await client.Organizations.GetMembersAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId,
+    filter);
+
+// Invite an existing user to the organization
+var inviteResult = await client.Organizations.InviteExistingUserAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId,
+    userId);
+
+// Remove a member from the organization
+var removeResult = await client.Organizations.RemoveMemberAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId,
+    memberId);
 ```
 
 ## 📚 Documentation
