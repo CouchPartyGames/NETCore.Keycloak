@@ -1,13 +1,12 @@
 name: Deploy
 on:
-  pull_request:
-    types:
-      - closed
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
-  # Deploy nuget package when a branch is labeled with `release` and the merge is done to master.
+  # Deploy nuget package when a version tag is pushed
   Deploy:
-    if: github.event.pull_request.merged == true && contains(github.event.pull_request.labels.*.name, 'release') && github.event.pull_request.base.ref == 'master'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository

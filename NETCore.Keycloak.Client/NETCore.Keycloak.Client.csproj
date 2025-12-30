@@ -1,11 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Authors>Hasni Mehdi</Authors>
+    <Authors>Hasni Mehdi;CouchPartyGames</Authors>
     <Description>
       A comprehensive .NET Core client library for Keycloak that provides seamless integration with Keycloak's authentication and authorization services.
       This library offers a robust implementation of Keycloak's REST API, including support for OpenID Connect, OAuth 2.0, and User-Managed Access (UMA 2.0).
     </Description>
-    <PackageVersion>1.0.2</PackageVersion>
+    <PackageVersion>1.1.0</PackageVersion>
     <PackageId>Keycloak.NETCore.Client</PackageId>
     <PackageTags>keycloak;oauth2;authentication;authorization;openid-connect;oidc;oidc-provider;fapi;fapi-client;user-managed-access;financial-security</PackageTags>
     <PackageIcon>black_cockpit.png</PackageIcon>
@@ -14,7 +14,7 @@
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageProjectUrl>https://github.com/Black-Cockpit/NETCore.Keycloak</PackageProjectUrl>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0;net10.0</TargetFrameworks>
     <LangVersion>latest</LangVersion>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>disable</Nullable>
@@ -28,14 +28,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0"/>
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.2.0"/>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.Abstractions" Version="2.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authorization" Version="8.0.11"/>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1"/>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.2"/>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3"/>
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.3.0"/>
-    <PackageReference Include="System.Text.Json" Version="8.0.5"/>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.33"/>
     <None Include="black_cockpit.png" Pack="true" PackagePath="\"/>
     <None Include="LICENSE" Pack="true" PackagePath="\"/>
