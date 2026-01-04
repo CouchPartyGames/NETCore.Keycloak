@@ -113,7 +113,7 @@ services.AddKeycloakAuthentication(options =>
     options.RealmAdminCredentials = new KcClientCredentials
     {
         ClientId = "your-client-id",
-        ClientSecret = "your-client-secret"
+        Secret = "your-client-secret"
     };
 });
 ```
