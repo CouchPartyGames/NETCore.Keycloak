@@ -135,6 +135,17 @@ var token = await keycloakClient.Auth.GetClientCredentialsTokenAsync(
         Secret = "your-client-secret"
     });
 
+// Check for authentication errors
+if (token.IsError)
+{
+    Console.WriteLine($"Authentication error: {token.ErrorMessage}");
+    return;
+}
+
+// Get the actual token from the Response property
+var accessToken = token.Response.AccessToken;
+Console.WriteLine($"Successfully authenticated. Access token obtained.");
+
 // Use the token for other operations
 var users = await keycloakClient.Users.GetAsync(
     "your-realm",
