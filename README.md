@@ -132,7 +132,7 @@ var token = await keycloakClient.Auth.GetClientCredentialsTokenAsync(
     new KcClientCredentials
     {
         ClientId = "your-client-id",
-        ClientSecret = "your-client-secret"
+        Secret = "your-client-secret"
     });
 
 // Use the token for other operations
