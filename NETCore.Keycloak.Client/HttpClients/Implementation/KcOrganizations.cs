@@ -229,6 +229,123 @@ internal sealed class KcOrganizations(string baseUrl,
         );
     }
 
+    /// <inheritdoc cref="IKcOrganizations.AddMemberAsync"/>
+    public Task<KcResponse<object>> AddMemberAsync(
+        string realm,
+        string accessToken,
+        string organizationId,
+        string userId,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the organization ID is not null or empty.
+        ValidateRequiredString(nameof(organizationId), organizationId);
+
+        // Validate that the user ID is not null or empty.
+        ValidateRequiredString(nameof(userId), userId);
+
+        // Construct the URL for adding a member to the organization.
+        var url = $"{BaseUrl}/{realm}/organizations/{organizationId}/members";
+
+        // Process the request to add the member.
+        // The body contains only the user ID as a string (UUID with or without quotes, trimmed).
+        return ProcessRequestAsync<object>(
+            url,
+            HttpMethod.Post,
+            accessToken,
+            "Unable to add member to organization",
+            userId.Trim(),
+            cancellationToken: cancellationToken
+        );
+    }
+
+    /// <inheritdoc cref="IKcOrganizations.InviteUserByEmailAsync"/>
+    public async Task<KcResponse<object>> InviteUserByEmailAsync(
+        string realm,
+        string accessToken,
+        string organizationId,
+        KcInviteUserByEmailRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the organization ID is not null or empty.
+        ValidateRequiredString(nameof(organizationId), organizationId);
+
+        // Validate that the request object is not null.
+        ValidateNotNull(nameof(request), request);
+
+        // Validate that the email is not null or empty.
+        ValidateRequiredString(nameof(request.Email), request.Email);
+
+        // Construct the URL for inviting a user by email.
+        var url = $"{BaseUrl}/{realm}/organizations/{organizationId}/members/invite-user";
+
+        try
+        {
+            // Execute the HTTP POST request to invite the user by email.
+            using var inviteRequest = await ExecuteRequest(async () =>
+            {
+                // Initialize the HTTP client for the request.
+                using var client = new HttpClient();
+
+                // Add the authorization header.
+                client.DefaultRequestHeaders.Add("Authorization", $"Bearer {accessToken}");
+
+                // Build the form content dictionary with email and optional fields.
+                var formData = new Dictionary<string, string>
+                {
+                    { "email", request.Email }
+                };
+
+                // Add optional first name if provided.
+                if ( !string.IsNullOrWhiteSpace(request.FirstName) )
+                {
+                    formData.Add("firstName", request.FirstName);
+                }
+
+                // Add optional last name if provided.
+                if ( !string.IsNullOrWhiteSpace(request.LastName) )
+                {
+                    formData.Add("lastName", request.LastName);
+                }
+
+                // Create the form content with the user details.
+                using var form = new FormUrlEncodedContent(formData);
+
+                // Send the POST request to the endpoint with the form content.
+                return await client.PostAsync(new Uri(url), form, cancellationToken)
+                    .ConfigureAwait(false);
+            }, new KcHttpMonitoringFallbackModel
+            {
+                Url = url,
+                HttpMethod = HttpMethod.Post
+            }).ConfigureAwait(false);
+
+            // Handle the response.
+            return await HandleAsync<object>(inviteRequest, cancellationToken).ConfigureAwait(false);
+        }
+        catch ( Exception e )
+        {
+            // Log the error if a logger is available.
+            if ( Logger != null )
+            {
+                KcLoggerMessages.Error(Logger, "Unable to invite user by email to organization", e);
+            }
+
+            // Return a response indicating an error occurred.
+            return new KcResponse<object>
+            {
+                IsError = true,
+                ErrorMessage = "Unable to invite user by email to organization",
+                Exception = e
+            };
+        }
+    }
+
     /// <inheritdoc cref="IKcOrganizations.InviteExistingUserAsync"/>
     public async Task<KcResponse<object>> InviteExistingUserAsync(
         string realm,
@@ -323,6 +440,40 @@ internal sealed class KcOrganizations(string baseUrl,
             HttpMethod.Delete,
             accessToken,
             "Unable to remove member from organization",
+            cancellationToken: cancellationToken
+        );
+    }
+
+    /// <inheritdoc cref="IKcOrganizations.GetMemberOrganizationsAsync"/>
+    public Task<KcResponse<IEnumerable<KcOrganization>>> GetMemberOrganizationsAsync(
+        string realm,
+        string accessToken,
+        string organizationId,
+        string memberId,
+        KcOrganizationFilter filter = null,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the organization ID is not null or empty.
+        ValidateRequiredString(nameof(organizationId), organizationId);
+
+        // Validate that the member ID is not null or empty.
+        ValidateRequiredString(nameof(memberId), memberId);
+
+        // Initialize the filter if not provided, with briefRepresentation=true as default.
+        filter ??= new KcOrganizationFilter { BriefRepresentation = true };
+
+        // Construct the URL for retrieving organizations associated with the member.
+        var url = $"{BaseUrl}/{realm}/organizations/{organizationId}/members/{memberId}/organizations{filter.BuildQuery()}";
+
+        // Process the request to retrieve the list of organizations.
+        return ProcessRequestAsync<IEnumerable<KcOrganization>>(
+            url,
+            HttpMethod.Get,
+            accessToken,
+            "Unable to get member organizations",
             cancellationToken: cancellationToken
         );
     }

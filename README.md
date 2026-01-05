@@ -207,7 +207,27 @@ var managedMembers = await client.Organizations.GetMembersAsync(
     organizationId,
     filter);
 
-// Invite an existing user to the organization
+// Add an existing user as a member of the organization
+var addResult = await client.Organizations.AddMemberAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId,
+    userId);
+
+// Invite a user by email (sends invitation or registration link)
+var emailInvite = new KcInviteUserByEmailRequest
+{
+    Email = "user@example.com",
+    FirstName = "John",
+    LastName = "Doe"
+};
+var inviteByEmailResult = await client.Organizations.InviteUserByEmailAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId,
+    emailInvite);
+
+// Invite an existing user to the organization (by user ID)
 var inviteResult = await client.Organizations.InviteExistingUserAsync(
     realm,
     token.Response.AccessToken,
@@ -220,6 +240,25 @@ var removeResult = await client.Organizations.RemoveMemberAsync(
     token.Response.AccessToken,
     organizationId,
     memberId);
+
+// Get all organizations associated with a member
+var memberOrgs = await client.Organizations.GetMemberOrganizationsAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId,
+    memberId);
+
+// Get full representation of member's organizations (not just brief)
+var memberOrgsFilter = new KcOrganizationFilter
+{
+    BriefRepresentation = false
+};
+var memberOrgsFull = await client.Organizations.GetMemberOrganizationsAsync(
+    realm,
+    token.Response.AccessToken,
+    organizationId,
+    memberId,
+    memberOrgsFilter);
 ```
 
 ## 📚 Documentation

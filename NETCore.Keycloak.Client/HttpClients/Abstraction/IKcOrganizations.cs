@@ -194,6 +194,59 @@ public interface IKcOrganizations
         CancellationToken cancellationToken = default);
 
     /// <summary>
+    /// Adds an existing user as a member of an organization.
+    ///
+    /// POST /{realm}/organizations/{org-id}/members
+    /// </summary>
+    /// <param name="realm">The Keycloak realm where the organization resides.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="organizationId">The unique identifier of the organization.</param>
+    /// <param name="userId">The unique identifier of the user to add to the organization.</param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing an object indicating the result of the add member operation,
+    /// or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, organization ID, or user ID is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// If the user is not found, or if it is already associated with the organization, an error response is returned.
+    /// Returns HTTP 201 on success, 400 for bad request, or 409 for conflict.
+    /// </remarks>
+    Task<KcResponse<object>> AddMemberAsync(string realm, string accessToken, string organizationId,
+        string userId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Invites a user by email to join an organization.
+    /// If the user with the given email address exists, sends an invitation link.
+    /// Otherwise, sends a registration link.
+    ///
+    /// POST /{realm}/organizations/{org-id}/members/invite-user
+    /// </summary>
+    /// <param name="realm">The Keycloak realm where the organization resides.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="organizationId">The unique identifier of the organization.</param>
+    /// <param name="request">The <see cref="KcInviteUserByEmailRequest"/> containing email and optional user details.</param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing an object indicating the result of the invite operation,
+    /// or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, organization ID, or request is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// Returns HTTP 204 No Content on success, 400 for bad request, 409 for conflict, or 500 for internal server error.
+    /// </remarks>
+    Task<KcResponse<object>> InviteUserByEmailAsync(string realm, string accessToken, string organizationId,
+        KcInviteUserByEmailRequest request, CancellationToken cancellationToken = default);
+
+    /// <summary>
     /// Invites an existing user to join an organization.
     ///
     /// POST /{realm}/organizations/{org-id}/members/invite-existing-user
@@ -236,4 +289,35 @@ public interface IKcOrganizations
     /// </exception>
     Task<KcResponse<object>> RemoveMemberAsync(string realm, string accessToken, string organizationId,
         string memberId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the organizations associated with the user that has the specified id.
+    ///
+    /// GET /{realm}/organizations/{org-id}/members/{member-id}/organizations
+    /// </summary>
+    /// <param name="realm">The Keycloak realm to query.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="organizationId">The unique identifier of the organization context.</param>
+    /// <param name="memberId">The unique identifier of the member whose organizations to retrieve.</param>
+    /// <param name="filter">
+    /// An optional <see cref="KcOrganizationFilter"/> object containing query parameters for filtering the results.
+    /// If not provided, brief representation will be used by default (briefRepresentation=true).
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing an enumerable of <see cref="KcOrganization"/> objects
+    /// representing the organizations associated with the member, or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, organization ID, or member ID is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// Returns HTTP 200 with organization list on success, or 400 for bad request.
+    /// Set filter.BriefRepresentation to false to return full representation instead of basic fields.
+    /// </remarks>
+    Task<KcResponse<IEnumerable<KcOrganization>>> GetMemberOrganizationsAsync(string realm, string accessToken,
+        string organizationId, string memberId, KcOrganizationFilter filter = null,
+        CancellationToken cancellationToken = default);
 }
