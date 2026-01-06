@@ -320,4 +320,32 @@ public interface IKcOrganizations
     Task<KcResponse<IEnumerable<KcOrganization>>> GetMemberOrganizationsAsync(string realm, string accessToken,
         string organizationId, string memberId, KcOrganizationFilter filter = null,
         CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns all organizations associated with the user that has the specified id.
+    ///
+    /// GET /{realm}/organizations/members/{member-id}/organizations
+    /// </summary>
+    /// <param name="realm">The Keycloak realm to query.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="memberId">The unique identifier of the user/member whose organizations to retrieve.</param>
+    /// <param name="briefRepresentation">
+    /// If false, return the full representation. Otherwise, only the basic fields are returned.
+    /// Defaults to true.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing an enumerable of <see cref="KcOrganization"/> objects
+    /// representing all organizations associated with the user, or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, or member ID is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// Returns HTTP 200 with organization list on success, or 400 for bad request.
+    /// </remarks>
+    Task<KcResponse<IEnumerable<KcOrganization>>> GetUserOrganizationsAsync(string realm, string accessToken,
+        string memberId, bool briefRepresentation = true, CancellationToken cancellationToken = default);
 }

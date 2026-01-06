@@ -477,4 +477,34 @@ internal sealed class KcOrganizations(string baseUrl,
             cancellationToken: cancellationToken
         );
     }
+
+    /// <inheritdoc cref="IKcOrganizations.GetUserOrganizationsAsync"/>
+    public Task<KcResponse<IEnumerable<KcOrganization>>> GetUserOrganizationsAsync(
+        string realm,
+        string accessToken,
+        string memberId,
+        bool briefRepresentation = true,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the member ID is not null or empty.
+        ValidateRequiredString(nameof(memberId), memberId);
+
+        // Build query string for briefRepresentation parameter.
+        var queryString = $"?briefRepresentation={briefRepresentation.ToString().ToLowerInvariant()}";
+
+        // Construct the URL for retrieving all organizations associated with the user.
+        var url = $"{BaseUrl}/{realm}/organizations/members/{memberId}/organizations{queryString}";
+
+        // Process the request to retrieve the list of organizations.
+        return ProcessRequestAsync<IEnumerable<KcOrganization>>(
+            url,
+            HttpMethod.Get,
+            accessToken,
+            "Unable to get user organizations",
+            cancellationToken: cancellationToken
+        );
+    }
 }
