@@ -2,6 +2,7 @@ using Microsoft.Extensions.Logging;
 using NETCore.Keycloak.Client.HttpClients.Abstraction;
 using NETCore.Keycloak.Client.Models;
 using NETCore.Keycloak.Client.Models.Common;
+using NETCore.Keycloak.Client.Models.IdentityProviders;
 using NETCore.Keycloak.Client.Models.Organizations;
 using NETCore.Keycloak.Client.Utils;
 
@@ -504,6 +505,124 @@ internal sealed class KcOrganizations(string baseUrl,
             HttpMethod.Get,
             accessToken,
             "Unable to get user organizations",
+            cancellationToken: cancellationToken
+        );
+    }
+
+    /// <inheritdoc cref="IKcOrganizations.GetIdentityProvidersAsync"/>
+    public Task<KcResponse<IEnumerable<KcIdentityProvider>>> GetIdentityProvidersAsync(
+        string realm,
+        string accessToken,
+        string organizationId,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the organization ID is not null or empty.
+        ValidateRequiredString(nameof(organizationId), organizationId);
+
+        // Construct the URL for retrieving identity providers associated with the organization.
+        var url = $"{BaseUrl}/{realm}/organizations/{organizationId}/identity-providers";
+
+        // Process the request to retrieve the list of identity providers.
+        return ProcessRequestAsync<IEnumerable<KcIdentityProvider>>(
+            url,
+            HttpMethod.Get,
+            accessToken,
+            "Unable to get organization identity providers",
+            cancellationToken: cancellationToken
+        );
+    }
+
+    /// <inheritdoc cref="IKcOrganizations.GetIdentityProviderAsync"/>
+    public Task<KcResponse<KcIdentityProvider>> GetIdentityProviderAsync(
+        string realm,
+        string accessToken,
+        string organizationId,
+        string alias,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the organization ID is not null or empty.
+        ValidateRequiredString(nameof(organizationId), organizationId);
+
+        // Validate that the identity provider alias is not null or empty.
+        ValidateRequiredString(nameof(alias), alias);
+
+        // Construct the URL for retrieving the identity provider details.
+        var url = $"{BaseUrl}/{realm}/organizations/{organizationId}/identity-providers/{alias}";
+
+        // Process the request to retrieve the identity provider.
+        return ProcessRequestAsync<KcIdentityProvider>(
+            url,
+            HttpMethod.Get,
+            accessToken,
+            "Unable to get organization identity provider",
+            cancellationToken: cancellationToken
+        );
+    }
+
+    /// <inheritdoc cref="IKcOrganizations.AddIdentityProviderAsync"/>
+    public Task<KcResponse<object>> AddIdentityProviderAsync(
+        string realm,
+        string accessToken,
+        string organizationId,
+        string identityProviderIdOrAlias,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the organization ID is not null or empty.
+        ValidateRequiredString(nameof(organizationId), organizationId);
+
+        // Validate that the identity provider ID or alias is not null or empty.
+        ValidateRequiredString(nameof(identityProviderIdOrAlias), identityProviderIdOrAlias);
+
+        // Construct the URL for adding an identity provider to the organization.
+        var url = $"{BaseUrl}/{realm}/organizations/{organizationId}/identity-providers";
+
+        // Process the request to add the identity provider.
+        // The body contains only the identity provider ID or alias as a string (trimmed).
+        return ProcessRequestAsync<object>(
+            url,
+            HttpMethod.Post,
+            accessToken,
+            "Unable to add identity provider to organization",
+            identityProviderIdOrAlias.Trim(),
+            cancellationToken: cancellationToken
+        );
+    }
+
+    /// <inheritdoc cref="IKcOrganizations.RemoveIdentityProviderAsync"/>
+    public Task<KcResponse<object>> RemoveIdentityProviderAsync(
+        string realm,
+        string accessToken,
+        string organizationId,
+        string alias,
+        CancellationToken cancellationToken = default)
+    {
+        // Validate the realm and access token inputs.
+        ValidateAccess(realm, accessToken);
+
+        // Validate that the organization ID is not null or empty.
+        ValidateRequiredString(nameof(organizationId), organizationId);
+
+        // Validate that the identity provider alias is not null or empty.
+        ValidateRequiredString(nameof(alias), alias);
+
+        // Construct the URL for removing an identity provider from the organization.
+        var url = $"{BaseUrl}/{realm}/organizations/{organizationId}/identity-providers/{alias}";
+
+        // Process the request to remove the identity provider.
+        return ProcessRequestAsync<object>(
+            url,
+            HttpMethod.Delete,
+            accessToken,
+            "Unable to remove identity provider from organization",
             cancellationToken: cancellationToken
         );
     }

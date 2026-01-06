@@ -1,6 +1,7 @@
 using NETCore.Keycloak.Client.Exceptions;
 using NETCore.Keycloak.Client.Models;
 using NETCore.Keycloak.Client.Models.Common;
+using NETCore.Keycloak.Client.Models.IdentityProviders;
 using NETCore.Keycloak.Client.Models.Organizations;
 
 namespace NETCore.Keycloak.Client.HttpClients.Abstraction;
@@ -348,4 +349,108 @@ public interface IKcOrganizations
     /// </remarks>
     Task<KcResponse<IEnumerable<KcOrganization>>> GetUserOrganizationsAsync(string realm, string accessToken,
         string memberId, bool briefRepresentation = true, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns all identity providers associated with the organization.
+    ///
+    /// GET /{realm}/organizations/{org-id}/identity-providers
+    /// </summary>
+    /// <param name="realm">The Keycloak realm to query.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="organizationId">The unique identifier of the organization.</param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing an enumerable of <see cref="KcIdentityProvider"/> objects
+    /// representing the identity providers associated with the organization, or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, or organization ID is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// Returns HTTP 200 with identity provider list on success.
+    /// </remarks>
+    Task<KcResponse<IEnumerable<KcIdentityProvider>>> GetIdentityProvidersAsync(string realm, string accessToken,
+        string organizationId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Returns the identity provider associated with the organization that has the specified alias.
+    ///
+    /// GET /{realm}/organizations/{org-id}/identity-providers/{alias}
+    /// </summary>
+    /// <param name="realm">The Keycloak realm to query.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="organizationId">The unique identifier of the organization.</param>
+    /// <param name="alias">The alias of the identity provider to retrieve.</param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing a <see cref="KcIdentityProvider"/> object
+    /// representing the identity provider, or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, organization ID, or alias is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// Searches for an identity provider with the given alias. If one is found and is associated with the organization, it is returned.
+    /// Otherwise, an error response with status 404 NOT_FOUND is returned.
+    /// </remarks>
+    Task<KcResponse<KcIdentityProvider>> GetIdentityProviderAsync(string realm, string accessToken,
+        string organizationId, string alias, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Adds the identity provider with the specified id or alias to the organization.
+    ///
+    /// POST /{realm}/organizations/{org-id}/identity-providers
+    /// </summary>
+    /// <param name="realm">The Keycloak realm where the organization resides.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="organizationId">The unique identifier of the organization.</param>
+    /// <param name="identityProviderIdOrAlias">The unique identifier or alias of the identity provider to add to the organization.</param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing an object indicating the result of the add operation,
+    /// or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, organization ID, or identity provider ID/alias is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// Adds, or associates, an existing identity provider with the organization.
+    /// If no identity provider is found, or if it is already associated with the organization, an error response is returned.
+    /// Returns HTTP 204 No Content on success, 400 for bad request, 403 for forbidden, or 409 for conflict.
+    /// </remarks>
+    Task<KcResponse<object>> AddIdentityProviderAsync(string realm, string accessToken, string organizationId,
+        string identityProviderIdOrAlias, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// Removes the identity provider with the specified alias from the organization.
+    ///
+    /// DELETE /{realm}/organizations/{org-id}/identity-providers/{alias}
+    /// </summary>
+    /// <param name="realm">The Keycloak realm where the organization resides.</param>
+    /// <param name="accessToken">The access token used for authentication.</param>
+    /// <param name="organizationId">The unique identifier of the organization.</param>
+    /// <param name="alias">The alias of the identity provider to remove from the organization.</param>
+    /// <param name="cancellationToken">
+    /// Optional cancellation token to cancel the asynchronous operation.
+    /// </param>
+    /// <returns>
+    /// A <see cref="KcResponse{T}"/> containing an object indicating the result of the remove operation,
+    /// or an error response if the operation fails.
+    /// </returns>
+    /// <exception cref="KcException">
+    /// Thrown if the realm, access token, organization ID, or identity provider alias is null or invalid.
+    /// </exception>
+    /// <remarks>
+    /// Breaks the association between the identity provider and the organization. The provider itself is not deleted.
+    /// If no provider is found, or if it is not currently associated with the organization, an error response is returned.
+    /// Returns HTTP 204 No Content on success, 400 for bad request, or 404 for not found.
+    /// </remarks>
+    Task<KcResponse<object>> RemoveIdentityProviderAsync(string realm, string accessToken, string organizationId,
+        string alias, CancellationToken cancellationToken = default);
 }
